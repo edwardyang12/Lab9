@@ -55,18 +55,112 @@
     <button>Trigger a Global Error</button>
   </section>
 
+  <script src="https://cdn.trackjs.com/agent/v3/latest/t.js"></script>
   <script>
+    window.TrackJS && TrackJS.install({ 
+      token: "074d5fcf5778431c8ce6353a2b1ef5f8"
+      // for more configuration options, see https://docs.trackjs.com
+    });
+  </script>
+                        
+
+  <script>
+    window.addEventListener('error', function(event){
+      console.log(event);
+      console.log("window onerror");
+    })
+
     let calculateBtn = document.querySelector('#calculate');
     calculateBtn.addEventListener('click', () => {
       let output = document.querySelector('output');
       let firstNum = document.querySelector('#first-num').value;
       let secondNum = document.querySelector('#second-num').value;
       let operator = document.querySelector('#operator').value;
-      output.innerHTML = eval(`${firstNum} ${operator} ${secondNum}`);
+      try{
+        output.innerHTML = eval(`${firstNum} ${operator} ${secondNum}`);
+      }
+      catch(err){
+        console.error(err);
+        console.error('pls enter valid input');
+      }
+      finally{
+        console.log('useful');
+      }
+
+    });
+    
+    const group = 'Console group: Yeah';
+    let errorBtns = Array.from(document.querySelectorAll('#error-btns > button'));
+    errorBtns[0].addEventListener('click',() => {
+      console.log("Console Log");
+    });
+    errorBtns[1].addEventListener('click',() => {
+      console.error("Console error");
+    });
+    errorBtns[2].addEventListener('click', () => {
+      console.dir(errorBtns[2]);
+    });
+    errorBtns[3].addEventListener('click', () => {
+      console.dirxml(errorBtns[3]);
+    });
+    errorBtns[4].addEventListener('click',() =>{
+      console.group(group);
+      console.info('No');
+      console.info('Yes');
+      console.info('Nah');
+    });
+    errorBtns[5].addEventListener('click', () => {
+      console.info('Nah');
+      console.groupEnd(group);
+      console.info('Nah');
     });
 
-    let errorBtns = Array.from(document.querySelectorAll('#error-btns > button'));
-    // TODO - Make buttons functional
+    errorBtns[6].addEventListener('click', () =>{
+      console.table([
+        {
+          yuh: 'pogg',
+          nah: 'unpogg',
+          woo: 'poggers',
+        },
+        {
+          yuh: 'porg',
+          nah: 'unporg',
+        },
+        {
+          yuh: 'pogchamp',
+          nah: 'unpogchamp',
+        }
+      ]);
+    });
+
+    errorBtns[7].addEventListener('click', () => {
+      console.time();
+    });
+    
+    errorBtns[8].addEventListener('click', () => {
+      console.timeEnd();
+    });
+
+    errorBtns[9].addEventListener('click', () => {
+      const test = () => { first(); };
+      const first = () => { third(); };
+      const third = () => { console.trace(); };
+      test();
+    });
+
+    class customError extends Error {
+      constructor(message) {
+        super(message);
+        this.name = "customError"; 
+      }
+    }
+    function test2() {
+      throw new customError("meep merp!");
+    }
+    errorBtns[10].addEventListener('click', () =>{
+      test2();
+    });
+    
   </script>
 </body>
 </html>
